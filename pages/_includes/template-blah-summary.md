@@ -1,5 +1,9 @@
-# extension-complex-blah.md file
+template-blah-summary.md
+    This is the summary markdown file that gets inserted into the sd.html template. for a more formal narrative summary of constraints.  in future hope to automate this to computer generated code.
 
-This is the summary markdown file that gets inserted into the sd.html template which is used for extensions too.
+    #### Complete Summary of the Mandatory Requirements
 
- blah blah blah
+    1.
+    1.
+    1.
+    

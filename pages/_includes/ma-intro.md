@@ -1,4 +1,4 @@
-template-blah-intro.md file
+ma-intro.md file
 
     This is the introduction markdown file that gets inserted into the sd.html template.
 

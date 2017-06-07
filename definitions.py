@@ -34,7 +34,7 @@ igxml ='''<?xml version="1.0" encoding="UTF-8"?><!--Hidden IG for de facto IG pu
 
 # extension in spreadsheet - these need to be manually listed here needs to be named same as SD files
 
-extensions = ['template-blah','template-complex']
+extensions = ['template-blah','template-complex','template-view','template-type','template-subtype','template-height','template-width', 'template-frames','template-duration']
 
 # operation in spreadsheet - these need to be manually listed here
 
@@ -59,6 +59,59 @@ structuremaps = ['Foo']
 # ====================== this is all the same for all IGs ===================
 
 # Function definitions here
+
+
+def make_frags(frag_id):  # create [id]-intro.md, [id]-search.md and [id]-summary.md files
+
+    # default content for files
+    intro = '''
+    This is the introduction markdown file that gets inserted into the sd.html template.
+
+    This profile sets minimum expectations for blah blah blah
+
+    ##### Mandatory Data Elements and Terminology
+
+    The following data-elements are mandatory (i.e data MUST be present). blah blah blah
+
+    **must have:**
+
+    1. blah
+    1. blah
+    1. blah
+
+    **Additional Profile specific implementation guidance:**
+
+    #### Examples
+    '''
+    srch = '''
+    This is the search markdown file that gets inserted into the sd.html Quick Start section for explanation of the search requirements.
+    '''
+    sumry = '''
+    This is the summary markdown file that gets inserted into the sd.html template. for a more formal narrative summary of constraints.  in future hope to automate this to computer generated code.
+
+    #### Complete Summary of the Mandatory Requirements
+
+    1.
+    1.
+    1.
+    '''
+
+    # check if files already exist before writing files
+    frag = dir + 'pages/_includes/'+ frag_id
+
+    fragf = open(frag + '-intro.md', 'w')
+    fragf.write(frag_id + '-intro.md file\n' + intro)
+    logging.info('added file: ' + frag + '-intro.md')
+    fragf = open(frag + '-summary.md', 'w')
+    fragf.write(frag_id + '-summary.md' + sumry)
+    logging.info('added file: ' + frag + '-summary.md')
+    fragf = open(frag + '-search.md', 'w')
+    fragf.write(frag_id + '-search.md file\n' + srch)
+    logging.info('added file: ' + frag +'-search.md')
+    return
+
+
+
 def update_sd(i,type,logical):
     namespaces = {'o': 'urn:schemas-microsoft-com:office:office',
                   'x': 'urn:schemas-microsoft-com:office:excel',
@@ -68,7 +121,7 @@ def update_sd(i,type,logical):
     sd_file = open(dir + 'resources/' + i)  # for each spreadsheet in /resources open value and read  SD id and create and append dict struct to definiions file
     sdxml = etree.parse(sd_file)  # lxml module to parse excel xml
     if logical:  # Get the id from the data element row2 column "element"
-        sdid = sdxml.xpath('/ss:Workbook/ss:Worksheet[3]/ss:Table/ss:Row[2]/ss:Cell[2]/ss:Data',                       namespaces=namespaces)  # use xpath to get the id from the spreadsheet and retain case
+        sdid = sdxml.xpath('/ss:Workbook/ss:Worksheet[3]/ss:Table/ss:Row[2]/ss:Cell[2]/ss:Data',namespaces=namespaces)  # use xpath to get the id from the spreadsheet and retain case
         temp_id = sdid[0].text # retain case
         update_igxml('StructureDefinition','logical' , temp_id)# add to ig.xml as an SD
     else:
@@ -77,6 +130,9 @@ def update_sd(i,type,logical):
         temp_id = sdid[0].text.lower()  # use lower case
     update_igjson(type, temp_id) # add base to definitions file
     update_igjson(type, temp_id, 'defns') # add base to definitions file
+    if not os.path.exists(dir + 'pages/_includes/'+ temp_id + '-intro.md'):  # if intro fragment is missing then create new page fragments for extension
+        make_frags(temp_id)
+
     return
 
 def update_igxml(type, purpose, id):
@@ -117,6 +173,8 @@ def update_def(filename, type, purpose):
       update_igjson(type, vsid, 'source', filename) # add source filename to definitions file
       if type == 'StructureDefinition':
           update_igjson(type, vsid, 'defns')  # add base to definitions file
+          if not os.path.exists(dir + 'pages/_includes/'+ vsid + '-intro.md'):  # if intro fragment is missing then create new page fragments for extension
+              make_frags(vsid)
       update_igxml(type, purpose, vsid)
       return
 
@@ -171,6 +229,9 @@ def main():
     for extension in extensions:
         update_igjson('StructureDefinition', extension, 'base')
         update_igjson('StructureDefinition', extension, 'defns')
+        if not os.path.exists(dir + 'pages/_includes/'+ extension + '-intro.md'):  # if intro fragment is missing then create new page fragments for extension
+            make_frags(extension)
+
     # add spreadsheet operations
     for operation in operations:
        update_igjson('OperationDefinition', operation, 'base')
