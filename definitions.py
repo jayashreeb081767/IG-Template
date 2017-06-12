@@ -121,7 +121,7 @@ def update_sd(i,type,logical):
     sd_file = open(dir + 'resources/' + i)  # for each spreadsheet in /resources open value and read  SD id and create and append dict struct to definiions file
     sdxml = etree.parse(sd_file)  # lxml module to parse excel xml
     if logical:  # Get the id from the data element row2 column "element"
-        sdid = sdxml.xpath('/ss:Workbook/ss:Worksheet[3]/ss:Table/ss:Row[2]/ss:Cell[2]/ss:Data',namespaces=namespaces)  # use xpath to get the id from the spreadsheet and retain case
+        sdid = sdxml.xpath('/ss:Workbook/ss:Worksheet[2]/ss:Table/ss:Row[2]/ss:Cell[2]/ss:Data',namespaces=namespaces)  # use xpath to get the id from the spreadsheet and retain case
         temp_id = sdid[0].text # retain case
         update_igxml('StructureDefinition','logical' , temp_id)# add to ig.xml as an SD
     else:

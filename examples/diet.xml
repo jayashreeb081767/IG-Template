@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Basic xmlns="http://hl7.org/fhir">
 	<id value="diet"/>
+	<meta>
+		<profile value="http://www.fhir.org/guides/ig-template/StructureDefinition/template-basic"/>
+	</meta>
 	<text>
 		<status value="generated"/>
 		<div xmlns="http://www.w3.org/1999/xhtml">
@@ -26,7 +29,7 @@
 		<valueCode value="foo"/>
 	</extension>
 	<identifier>
-		<system value="http://goodhealth.org/basic/identifiers"/>
+		<system value="http://someother.org/basic/identifiers"/>
 		<value value="19283746"/>
 	</identifier>
 	<code>
